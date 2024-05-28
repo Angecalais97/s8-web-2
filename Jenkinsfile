@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials-id')
-        SLACK_CREDENTIALS = credentials('slack-credentials-id')
+        // SLACK_CREDENTIALS = credentials('slack-credentials-id')
         DOCKER_IMAGE_NAME = "s5carles/let-do-it"
     }
 
