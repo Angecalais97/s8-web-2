@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('carles-docker-hub')
+        // DOCKER_HUB_CREDENTIALS = credentials('carles-docker-hub')
         // SLACK_CREDENTIALS = credentials('slack-credentials-id')
         DOCKER_IMAGE_NAME = "s5carles/let-do-it"
     }
