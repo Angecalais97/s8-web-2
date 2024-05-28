@@ -24,19 +24,20 @@ pipeline {
             steps {
                 script {
                     withCredentials([string(credentialsId: 'carles-docker-hub', variable: 'DOCKER_HUB_PASSWORD')]) {
-                    // sh 'docker login -u ${DOCKER_HUB_USER} -p ${DOCKER_HUB_PASSWORD}'
+                        
+                    sh 'docker login run -d -P ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} 
                         // login is handled by withRegistry
                     }
                 }
             }
         }
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}").push()
-                }
-            }
-        }
+        // stage('Push Docker Image') {
+        //     steps {
+        //         script {
+        //             docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}").push()
+        //         }
+        //     }
+        // }
     }
     // post {
     //     success {
