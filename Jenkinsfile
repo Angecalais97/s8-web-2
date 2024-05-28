@@ -42,20 +42,20 @@ pipeline {
             }
         }
     }
-    post {
-        success {
-            slackSend (
-                channel: '#your-slack-channel',
-                color: 'good',
-                message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) succeeded. Docker image: ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
-            )
-        }
-        failure {
-            slackSend (
-                channel: '#your-slack-channel',
-                color: 'danger',
-                message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) failed."
-            )
-        }
-    }
+    // post {
+    //     success {
+    //         slackSend (
+    //             channel: '#your-slack-channel',
+    //             color: 'good',
+    //             message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) succeeded. Docker image: ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
+    //         )
+    //     }
+    //     failure {
+    //         slackSend (
+    //             channel: '#your-slack-channel',
+    //             color: 'danger',
+    //             message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) failed."
+    //         )
+    //     }
+    // }
 }
