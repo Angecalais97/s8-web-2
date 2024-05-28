@@ -2,8 +2,6 @@ pipeline {
     agent any
 
     environment {
-        // DOCKER_HUB_CREDENTIALS = credentials('carles-docker-hub')
-        // SLACK_CREDENTIALS = credentials('slack-credentials-id')
         DOCKER_IMAGE_NAME = "s5carles/let-do-it"
     }
 
@@ -22,37 +20,42 @@ pipeline {
         }
         stage('Docker Login') {
             steps {
-                script {
-                    withCredentials([string(credentialsId: 'carles-docker-hub', variable: 'DOCKER_HUB_PASSWORD')]) {
-                        
-                    sh 'docker run -d -P ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}' 
-                        // login is handled by withRegistry
+                withCredentials([string(credentialsId: 'carles-docker-hub', variable: 'DOCKER_HUB_TOKEN')]) {
+                    script {
+                        sh 'echo ${DOCKER_HUB_TOKEN} | docker login -u s5carles --password-stdin'
                     }
                 }
             }
         }
-        // stage('Push Docker Image') {
-        //     steps {
-        //         script {
-        //             docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}").push()
-        //         }
-        //     }
-        // }
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}").push()
+                }
+            }
+        }
+        stage('Run Docker Container') {
+            steps {
+                script {
+                    sh 'docker run -d -P ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}'
+                }
+            }
+        }
     }
-    // post {
-    //     success {
-    //         slackSend (
-    //             channel: '#your-slack-channel',
-    //             color: 'good',
-    //             message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) succeeded."
-    //         )
-    //     }
-    //     failure {
-    //         slackSend (
-    //             channel: '#your-slack-channel',
-    //             color: 'danger',
-    //             message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) failed."
-    //         )
-    //     }
-    // }
+    post {
+        success {
+            slackSend (
+                channel: '#your-slack-channel',
+                color: 'good',
+                message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) succeeded. Docker image: ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
+            )
+        }
+        failure {
+            slackSend (
+                channel: '#your-slack-channel',
+                color: 'danger',
+                message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) failed."
+            )
+        }
+    }
 }
