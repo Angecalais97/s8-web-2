@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_HUB_CREDENTIALS = credentials('dockerhub-credentials-id')
+        DOCKER_HUB_CREDENTIALS = credentials('carles-docker-hub')
         // SLACK_CREDENTIALS = credentials('slack-credentials-id')
         DOCKER_IMAGE_NAME = "s5carles/let-do-it"
     }
@@ -23,7 +23,7 @@ pipeline {
         stage('Docker Login') {
             steps {
                 script {
-                    docker.withRegistry('https://index.docker.io/v1/', 'dockerhub-credentials-id') {
+                    docker.withRegistry('https://index.docker.io/v1/', 'carles-docker-hub') {
                         // login is handled by withRegistry
                     }
                 }
