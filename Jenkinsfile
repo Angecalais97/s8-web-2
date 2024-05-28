@@ -37,10 +37,26 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    sh 'docker run -d -P ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}'
+                    // Use double quotes to allow Jenkins to interpolate the variable
+                    sh "docker run -d -P ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
                 }
             }
         }
     }
-    
+    // post {
+    //     success {
+    //         slackSend (
+    //             channel: '#your-slack-channel',
+    //             color: 'good',
+    //             message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) succeeded. Docker image: ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
+    //         )
+    //     }
+    //     failure {
+    //         slackSend (
+    //             channel: '#your-slack-channel',
+    //             color: 'danger',
+    //             message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) failed."
+    //         )
+    //     }
+    // }
 }
