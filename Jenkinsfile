@@ -39,6 +39,7 @@ pipeline {
                 script {
                     // Use double quotes to allow Jenkins to interpolate the variable
                     sh "docker run -d -P ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
+                    sh "docker ps"
                 }
             }
         }
