@@ -14,13 +14,13 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build("${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}", "-f application-01.Dockerfile .")
+                    sh 'docker build ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} -f application-01.Dockerfile .'
                 }
             }
         }
         stage('Docker Login') {
             steps {
-                withCredentials([string(credentialsId: 'carles-docker-hub', variable: 'DOCKER_HUB_TOKEN')]) {
+                withCredentials([string(credentialsId: 'docker-hub-cred', variable: 'DOCKER_HUB_TOKEN')]) {
                     script {
                         sh 'echo ${DOCKER_HUB_TOKEN} | docker login -u s5carles --password-stdin'
                     }
