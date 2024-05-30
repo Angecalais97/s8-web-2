@@ -14,7 +14,11 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build -t ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} -f application-01.Dockerfile .'
+                    // Use /bin/bash to ensure correct shell
+                    sh '''
+                    #!/bin/bash
+                    docker build -t ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} -f application-01.Dockerfile .
+                    '''
                 }
             }
         }
@@ -22,7 +26,11 @@ pipeline {
             steps {
                 withCredentials([string(credentialsId: 'docker-hub-cred', variable: 'DOCKER_HUB_TOKEN')]) {
                     script {
-                        sh 'echo ${DOCKER_HUB_TOKEN} | docker login -u s5carles --password-stdin'
+                        // Use /bin/bash to ensure correct shell
+                        sh '''
+                        #!/bin/bash
+                        echo ${DOCKER_HUB_TOKEN} | docker login -u s5carles --password-stdin
+                        '''
                     }
                 }
             }
@@ -37,8 +45,12 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    sh "docker run -d -P ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
-                    sh "docker ps"
+                    // Use /bin/bash to ensure correct shell
+                    sh '''
+                    #!/bin/bash
+                    docker run -d -P ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}
+                    docker ps
+                    '''
                 }
             }
         }
