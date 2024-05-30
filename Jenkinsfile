@@ -14,7 +14,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    sh 'docker build ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} -f application-01.Dockerfile .'
+                    sh 'docker build -t ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} -f application-01.Dockerfile .'
                 }
             }
         }
@@ -37,10 +37,8 @@ pipeline {
         stage('Run Docker Container') {
             steps {
                 script {
-                    // Use double quotes to allow Jenkins to interpolate the variable
                     sh "docker run -d -P ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
                     sh "docker ps"
-                    
                 }
             }
         }
