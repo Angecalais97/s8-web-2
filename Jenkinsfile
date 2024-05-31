@@ -13,10 +13,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                script {
-                    // Use /bin/bash to ensure correct shell
-                    sh '''
-                    #!/bin/bash
+                sh '''
                     docker build -t ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER} -f application-01.Dockerfile .
                     '''
                 }
