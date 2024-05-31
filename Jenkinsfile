@@ -30,7 +30,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.image("${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}").push()
+                    docker.image("${DOCKER_IMAGE_NAME}:${BUILD_NUMBER}").push()
                 }
             }
         }
@@ -43,5 +43,20 @@ pipeline {
             }
         }
     }
-    
+    post {
+        success {
+            slackSend (
+                channel: 'jenkins-notification-ars',
+                color: 'good',
+                message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) succeeded. Docker image: ${DOCKER_IMAGE_NAME}:${env.BUILD_NUMBER}"
+            )
+        }
+        failure {
+            slackSend (
+                channel: 'jenkins-notification-ars',
+                color: 'danger',
+                message: "Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]' (${env.BUILD_URL}) failed."
+            )
+        }
+    }
 }
